@@ -43,18 +43,18 @@ int main(void){
 				config.timeout=atoi(temp);
 			}else if(cont ==3){
 				strncpy(temp,resultado,tam);
-				config.logpath=temp;
-				printf("->logpath=%s\n",config.logpath);
+				config.logpath= (char *) malloc (tam*sizeof(char)); //cambio1 pero a mi me sale con basura jaja
+				strcpy(config.logpath, temp);
 			}else if(cont==4){
-				strncpy(temp,resultado,tam);
-				config.logfile=temp;
-				printf("->logpath=%s\n",config.logfile);
+				strncpy(temp,resultado,tam); 
+				config.logfile= (char *) malloc (tam*sizeof(char)); //cambio2
+				strcpy(config.logfile, temp); 
 			}
 		cont++;
 		if(cont<5){
 			resultado=copiar(resultado,&tam);
 		}
-		free(temp);
+		free(temp);//al liberar memoria se pierde tu char por eso el strcpy
 	}	
 	printf("la estructura es\n ->puerto=%d\n ->thread=%d\n ->timeout=%d\n ->logpath=%s\n ->logfile=%s\n", config.puerto, config.thread, config.timeout, config.logpath, config.logfile);
 return 0;
@@ -66,9 +66,9 @@ char *responder;
 char *separador;
 
 	responder = strstr(leido,"=")+1;
-	if(responder[0]==32)
+	while(responder[0]==32)// cambio3: por si hay varios espacios jaja! Optimizado como dice nuestro amigo MMartinez
 	{
-		responder=strstr(responder," ")+1;
+		responder=responder+1;//cambio4: ya sabés que en la primera posición está tu espacio ¬¬
 	}
 	separador = strstr(responder,"#");
 	*prueba=separador-responder;
